@@ -6,6 +6,7 @@ from io import BytesIO
 import base64
 from bs4 import BeautifulSoup 
 import requests
+import numpy as np
 
 #don't change this
 matplotlib.use('Agg')
@@ -52,16 +53,22 @@ df = pd.DataFrame(temp, columns = ('Date','Market Cap','Volume','Open','Close'))
 df['Date'] = df['Date'].astype('datetime64')
 
 df['Market Cap'] = df['Market Cap'].str.replace(",","")
-df['Market Cap'] = df['Market Cap'].str.replace("$","", regex=False).astype('int64')
+df['Market Cap'] = df['Market Cap'].str.replace("$","", regex=False)
+df['Market Cap'] = df['Market Cap'].astype('float64')
 
 df['Volume'] = df['Volume'].str.replace(",","")
-df['Volume'] = df['Volume'].str.replace("$","", regex=False).astype('int64')
+df['Volume'] = df['Volume'].str.replace("$","", regex=False)
+df['Volume'] = df['Volume'].astype('float64')
 
 df['Open'] = df['Open'].str.replace(",","")
-df['Open'] = df['Open'].str.replace("$","", regex=False).astype('float64')
+df['Open'] = df['Open'].str.replace("$","", regex=False)
+df['Open'] = df['Open'].astype('float64')
 
 df['Close'] = df['Close'].str.replace(",","")
-df['Close'] = df['Close'].str.replace("$","", regex=False).astype('float64')
+df['Close'] = df['Close'].str.replace("$","", regex=False)
+df['Close'] = df['Close'].astype('float64')
+
+
 df2 = df.set_index("Date")
 df2['Volume'].plot()
 
@@ -71,7 +78,8 @@ df2['Volume'].plot()
 @app.route("/")
 def index(): 
 	
-	card_data = f'{df["Volume"].mean().round(2)}' #be careful with the " and ' 
+	#card_data = f'{df["Volume"].mean().round(2)}' #be careful with the " and ' 
+	card_data = f"{df['Volume'].mean()}"
 
 	# generate plot
 	ax = df.plot(figsize = (20,9)) 
